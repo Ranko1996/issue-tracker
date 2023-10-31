@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/prisma/client";
 import { createIssueSchema } from "../../validationSchemas";
+import { Status } from "@prisma/client";
 
 export async function POST(request: NextRequest) {
   const body = await request.json();
@@ -14,7 +15,15 @@ export async function POST(request: NextRequest) {
   return NextResponse.json(newIssue, { status: 201 });
 }
 
-export async function GET() {
-  const issues = await prisma.issue.findMany();
-  return NextResponse.json(issues);
-}
+// export async function GET() {
+//   const issues = await prisma.issue.findMany();
+//   return NextResponse.json(issues);
+// }
+
+// export async function GET_WITH_STATUS(stat: string) {
+//   const openIssues = await prisma.issue.findMany({
+//     where: {
+//       status: stat,
+//     },
+//   });
+// }

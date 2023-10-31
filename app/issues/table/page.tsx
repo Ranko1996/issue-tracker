@@ -1,5 +1,8 @@
+"use client";
+import Dropdown from "@/app/components/Dropdown";
 import { Badge, Table } from "@radix-ui/themes";
-import React from "react";
+// import React from "react";
+import React, { useState, useEffect } from "react";
 
 interface Issue {
   id: number;
@@ -10,15 +13,43 @@ interface Issue {
   updatedAt: Date;
 }
 
-const IssuesTablePage = async () => {
-  const res = await fetch("http://localhost:3000/api/issues", {
-    cache: "no-store",
-  });
-  const issues: Issue[] = await res.json();
-  console.log(issues);
+const IssuesTablePage = () => {
+  //   const [selectedValue, setSelectedValue] = useState("");
+  //   const res = await fetch(
+  //     `http://localhost:3000/api/issues/list?status=${selectedValue}`,
+  //     // `http://localhost:3000/api/issues/list?status`,
+  //     {
+  //       cache: "no-store",
+  //     }
+  //   );
+  const [selectedValue, setSelectedValue] = useState<string>("");
+  const [issues, setIssues] = useState<Issue[]>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      console.log("BLEEEEE");
+      try {
+        const res = await fetch(
+          selectedValue
+            ? `http://localhost:3000/api/issues/list?status=${selectedValue}`
+            : `http://localhost:3000/api/issues/list`
+          //   `http://localhost:3000/api/issues/list?status=${selectedValue}`
+        );
+        if (res.ok) {
+          const data: Issue[] = await res.json();
+          setIssues(data);
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, [selectedValue]);
 
   return (
     <>
+      <Dropdown setSelectedValue={setSelectedValue} />
       <Table.Root variant="surface">
         <Table.Header>
           <Table.Row>
